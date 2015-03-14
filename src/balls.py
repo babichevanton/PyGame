@@ -48,13 +48,19 @@ class GameMode:
 class Ball:
     '''Simple ball class'''
 
-    def __init__(self, filename, pos = (0.0, 0.0), speed = (0.0, 0.0)):
+    def __init__(self, constants, filename, pos = (0.0, 0.0), speed = (0.0, 0.0), density = 1.0, size = 1.0):
         '''Create a ball from image'''
+        self.constants = constants
         self.surface = pygame.image.load(filename)
+        new_width = int(round(self.surface.get_width() * size))
+        new_height = int(round(self.surface.get_height() * size))
+        self.surface = pygame.transform.scale(self.surface, (new_width, new_height))
         self.rect = self.surface.get_rect()
-        self.speed = speed
-        self.pos = pos
-        self.newpos = pos
+        self.speed = (speed[0] * self.constants['unit'], speed[1] * self.constants['unit'])
+        self.pos = (pos[0] * self.constants['unit'], pos[1] * self.constants['unit'])
+        self.mass = density * pygame.mask.from_surface(self.surface).count()
+        # height =
+        # self.energy = self.mass * self.constants['gravity'] *
         self.active = True
 
     def draw(self, surface):
@@ -88,10 +94,18 @@ class Ball:
 class Universe:
     '''Game universe'''
 
-    def __init__(self, msec, tickevent = pygame.USEREVENT):
+    def __init__(self, grav_acc, unit_int, msec, tickevent = pygame.USEREVENT):
         '''Run a universe with msec tick'''
+        self.ga = grav_acc
+        self.unit_int = unit_int
         self.msec = msec
         self.tickevent = tickevent
+
+    def get_constants(self):
+        constants = {}
+        constants['gravity'] = self.ga
+        constants['unit'] = self.unit_int
+        return constants
 
     def Start(self):
         '''Start running'''
@@ -152,13 +166,15 @@ class GameWithDnD(GameWithObjects):
 
 
 Init(SIZE)
-Game = Universe(50)
+Game = Universe(9, 5, 50)
 
 Run = GameWithDnD()
 for i in xrange(5):
     x, y = random.randrange(screenrect.w), random.randrange(screenrect.h)
     dx, dy = 1 + random.random() * 5, 1 + random.random() * 5
-    Run.objects.append(Ball("../data/ball.gif", (x,y), (dx,dy)))
+    size = 0.5 + 0.5 * random.randrange(3)
+    density = 1.0
+    Run.objects.append(Ball(Game.get_constants(), "../data/ball.gif", (x,y), (dx,dy), density, size))
 
 Game.Start()
 Run.Init()
