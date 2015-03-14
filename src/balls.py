@@ -4,10 +4,13 @@
 import pygame
 import random
 
+
 SIZE = 640, 480
+
 
 def intn(*arg):
     return map(int,arg)
+
 
 def Init(sz):
     '''Turn PyGame on'''
@@ -15,6 +18,7 @@ def Init(sz):
     pygame.init()
     screen = pygame.display.set_mode(sz)
     screenrect = screen.get_rect()
+
 
 class GameMode:
     '''Basic game mode class'''
@@ -40,12 +44,12 @@ class GameMode:
         '''What to do when entering this mode'''
         pass
 
+
 class Ball:
     '''Simple ball class'''
 
     def __init__(self, filename, pos = (0.0, 0.0), speed = (0.0, 0.0)):
         '''Create a ball from image'''
-        self.fname = filename
         self.surface = pygame.image.load(filename)
         self.rect = self.surface.get_rect()
         self.speed = speed
@@ -80,6 +84,7 @@ class Ball:
         self.speed = dx,dy
         self.rect.center = intn(*self.pos)
 
+
 class Universe:
     '''Game universe'''
 
@@ -95,6 +100,7 @@ class Universe:
     def Finish(self):
         '''Shut down an universe'''
         pygame.time.set_timer(self.tickevent, 0)
+
 
 class GameWithObjects(GameMode):
 
@@ -121,11 +127,11 @@ class GameWithObjects(GameMode):
         for obj in self.objects:
             obj.draw(surface)
 
+
 class GameWithDnD(GameWithObjects):
 
     def __init__(self, *argp, **argn):
         GameWithObjects.__init__(self, *argp, **argn)
-        self.oldpos = 0,0
         self.drag = None
 
     def Events(self, event):
@@ -134,15 +140,16 @@ class GameWithDnD(GameWithObjects):
             if click:
                 self.drag = click[0]
                 self.drag.active = False
-                self.oldpos = event.pos
         elif event.type == pygame.MOUSEMOTION and event.buttons[0]:
                 if self.drag:
                     self.drag.pos = event.pos
                     self.drag.speed = event.rel
         elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
-            self.drag.active = True
-            self.drag = None
+            if self.drag:
+                self.drag.active = True
+                self.drag = None
         GameWithObjects.Events(self, event)
+
 
 Init(SIZE)
 Game = Universe(50)
@@ -150,8 +157,8 @@ Game = Universe(50)
 Run = GameWithDnD()
 for i in xrange(5):
     x, y = random.randrange(screenrect.w), random.randrange(screenrect.h)
-    dx, dy = 1+random.random()*5, 1+random.random()*5
-    Run.objects.append(Ball("ball.gif",(x,y),(dx,dy)))
+    dx, dy = 1 + random.random() * 5, 1 + random.random() * 5
+    Run.objects.append(Ball("../data/ball.gif", (x,y), (dx,dy)))
 
 Game.Start()
 Run.Init()
