@@ -25,7 +25,7 @@ Init(SIZE)
 Game = Universe(50, 0.1, 20)
 
 Run = GameWithDnD()
-for i in xrange(1):
+for i in xrange(2):
     x, y = random.randrange(screenrect.w), random.randrange(screenrect.h)
     dx, dy = 1 + random.random() * 5, 1 + random.random() * 5
     angle_speed = 10 - random.randrange(21)

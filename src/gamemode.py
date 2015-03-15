@@ -44,7 +44,7 @@ class GameWithObjects(GameMode):
     def Logic(self, surface):
         GameMode.Logic(self, surface)
         for obj in self.objects:
-            obj.logic(surface)
+            obj.logic(surface, self.objects)
 
     def Draw(self, surface):
         GameMode.Draw(self, surface)
