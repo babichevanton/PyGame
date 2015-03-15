@@ -6,7 +6,7 @@ import random
 
 from gameuniverse import Universe
 from gamemode import GameWithDnD
-from gameobjects import Ball
+from gameobjects import RotatingBall
 
 
 SIZE = 640, 480
@@ -31,7 +31,13 @@ for i in xrange(2):
     angle_speed = 10 - random.randrange(21)
     size = 0.5 + 0.5 * random.randrange(3)
     density = 1.0
-    Run.objects.append(Ball(Game.get_constants(), "../data/ball.gif", (x,y), (dx,dy), angle_speed, density, size))
+    Run.objects.append(RotatingBall(Game.get_constants(),
+        "../data/ball.gif",
+        (x,y),
+        (dx,dy),
+        angle_speed,
+        density,
+        size))
 
 Game.Start()
 Run.Init()
