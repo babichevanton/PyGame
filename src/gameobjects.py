@@ -60,7 +60,7 @@ class Ball:
 
 
 class RotatingBall(Ball):
-    '''Simple ball class'''
+    '''Rotating ball class'''
 
     def __init__(self,
                  constants,
