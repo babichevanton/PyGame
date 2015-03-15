@@ -46,10 +46,9 @@ class Ball:
             self.surface = pygame.transform.rotozoom(self.image, self.angle, self.size)
             self.rect = self.surface.get_rect()
 
-    def logic(self, surface):
+    def logic(self, surface, balls):
         x, y = self.pos
         dx, dy = self.speed
-        # ball_mask = pygame.mask.from_surface(self.surface)
         if x < self.radius:
             x = self.rect.width/2
             dx = -int(dx * (1 - self.constants['dev_percent']))
@@ -64,6 +63,12 @@ class Ball:
             y = surface.get_height() - self.radius
             dy -= int(round(self.constants['gravity'] * 1.0 / self.constants['ticks_in_sec']))
             dy = -int(round(dy * (1 - self.constants['dev_percent'])))
+        # self_mask = pygame.mask.from_surface(self.surface)
+        # for ball in balls:
+        #     if ball is not self:
+        #         ball_mask = pygame.mask.from_surface(ball.surface)
+        #         if self_mask.overlap():
+        #
         self.pos = x, y
         self.speed = dx, dy
         self.rect.center = intn(*self.pos)
