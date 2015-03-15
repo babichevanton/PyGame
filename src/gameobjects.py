@@ -15,12 +15,16 @@ class Ball:
         '''Create a ball from image'''
         self.constants = constants
         self.image = pygame.image.load(filename)
+        self.radius = self.image
+        # self.image = pygame.Surface((111,111))
+        # self.image.fill(pygame.Color('#888888'))
         self.angle = 0
         self.surface = pygame.transform.rotozoom(self.image, self.angle, size)
         self.rect = self.surface.get_rect()
         self.speed = speed
         self.angle_speed = angle_speed
         self.size = size
+        self.radius = self.rect.height/2
         self.pos = pos
         self.mass = density * pygame.mask.from_surface(self.surface).count()
         self.active = True
@@ -40,26 +44,28 @@ class Ball:
             elif self.angle < -360:
                 self.angle += 360
             self.surface = pygame.transform.rotozoom(self.image, self.angle, self.size)
+            self.rect = self.surface.get_rect()
 
     def logic(self, surface):
-        x,y = self.pos
+        x, y = self.pos
         dx, dy = self.speed
-        if x < self.rect.width/2:
+        # ball_mask = pygame.mask.from_surface(self.surface)
+        if x < self.radius:
             x = self.rect.width/2
             dx = -int(dx * (1 - self.constants['dev_percent']))
-        elif x > surface.get_width() - self.rect.width/2:
+        elif x > surface.get_width() - self.radius:
             x = surface.get_width() - self.rect.width/2
             dx = -int(dx * (1 - self.constants['dev_percent']))
-        if y < self.rect.height/2:
-            y = self.rect.height/2
+        if y < self.radius:
+            y = self.radius
             dy -= int(round(self.constants['gravity'] * 1.0 / self.constants['ticks_in_sec']))
             dy = -int(round(dy * (1 - self.constants['dev_percent'])))
-        elif y > surface.get_height() - self.rect.height/2:
-            y = surface.get_height() - self.rect.height/2
+        elif y > surface.get_height() - self.radius:
+            y = surface.get_height() - self.radius
             dy -= int(round(self.constants['gravity'] * 1.0 / self.constants['ticks_in_sec']))
             dy = -int(round(dy * (1 - self.constants['dev_percent'])))
-        self.pos = x,y
-        self.speed = dx,dy
+        self.pos = x, y
+        self.speed = dx, dy
         self.rect.center = intn(*self.pos)
 
 
