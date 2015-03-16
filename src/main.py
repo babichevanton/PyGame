@@ -29,7 +29,7 @@ for i in xrange(2):
     x, y = random.randrange(screenrect.w), random.randrange(screenrect.h)
     dx, dy = 1 + random.random() * 5, 1 + random.random() * 5
     angle_speed = 10 - random.randrange(21)
-    size = 0.5 + 0.5 * random.randrange(3)
+    size = 0.5 + 0.3 * random.randrange(3)
     density = 1.0
     Run.objects.append(RotatingBall(Game.get_constants(),
         "../data/ball.gif",
