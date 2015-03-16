@@ -1,6 +1,6 @@
 import pygame
 from math import acos, cos, sin
-from math import sqrt
+from math import sqrt, floor, ceil
 
 class Ball:
     '''Simple ball class'''
@@ -83,10 +83,23 @@ class Ball:
                     self_x, self_y = self.pos
                     distance_x = (self.radius + ball.radius) * cos(axis_angle)
                     distance_y = (self.radius + ball.radius) * sin(axis_angle)
-                    displacement_x = int(round((distance_x - (ball_x - self_x)) / 2))
-                    displacement_y = int(round((distance_y - (ball_y - self_y)) / 2))
-                    self.pos = (self_x - displacement_x, self_y - displacement_y)
-                    ball.pos = (ball_x + displacement_x, ball_y + displacement_y)
+                    displacement_x = (distance_x - (ball_x - self_x)) / 2
+                    displacement_y = (distance_y - (ball_y - self_y)) / 2
+                    if displacement_x < 0:
+                        displacement_x = int(floor(displacement_x))
+                    else:
+                        displacement_x = int(ceil(displacement_x))
+                    if displacement_y < 0:
+                        displacement_y = int(floor(displacement_y))
+                    else:
+                        displacement_y = int(ceil(displacement_y))
+                    if self.active and ball.active:
+                        self.pos = (self_x - displacement_x, self_y - displacement_y)
+                        ball.pos = (ball_x + displacement_x, ball_y + displacement_y)
+                    elif self.active:
+                        self.pos = (self_x - displacement_x * 2, self_y - displacement_y * 2)
+                    elif ball.active:
+                        ball.pos = (ball_x + displacement_x * 2, ball_y + displacement_y * 2)
 
 
 class RotatingBall(Ball):
